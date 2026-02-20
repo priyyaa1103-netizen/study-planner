@@ -1,3 +1,28 @@
+from flask import Flask, render_template, request, redirect, url_for
+import sqlite3
+import os
+
+app = Flask(__name__)
+app.secret_key = 'study-planner-key'
+
+def init_db():
+    conn = sqlite3.connect('study.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS subjects 
+                 (id INTEGER PRIMARY KEY, name TEXT, hours REAL, priority INTEGER)''')
+    conn.commit()
+    conn.close()
+
+@app.route('/')
+def home():
+    init_db()
+    conn = sqlite3.connect('study.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM subjects ORDER BY priority DESC")
+    subjects = c.fetchall()
+    conn.close()
+    return render_template('index.html', subjects=subjects)
+
 @app.route('/add_subject', methods=['GET', 'POST'])
 def add_subject():
     if request.method == 'POST':
@@ -13,11 +38,6 @@ def add_subject():
         return redirect(url_for('home'))
     return render_template('add_subject.html')
 
-@app.route('/delete/<int:subject_id>')
-def delete_subject(subject_id):
-    conn = sqlite3.connect('study.db')
-    c = conn.cursor()
-    c.execute("DELETE FROM subjects WHERE id=?", (subject_id,))
-    conn.commit()
-    conn.close()
-    return redirect(url_for('home'))
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
