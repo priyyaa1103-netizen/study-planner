@@ -1,8 +1,3 @@
-@app.route('/delete/<int:subject_id>')
-def delete_subject(subject_id):
-    conn = sqlite3.connect('study.db')
-    c = conn.cursor()
-    c.execute("DELETE FROM subjects WHERE id=?", (subject_id,))
-    conn.commit()
-    conn.close()
-    return redirect(url_for('home'))
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)  
