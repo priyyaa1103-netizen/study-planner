@@ -1,2 +1,12 @@
-<a href="/delete/{{ subject[0] }}" onclick="return confirm('Delete {{ subject[1] }}?')" 
-   class="delete-btn">🗑️ Delete</a>
+<!DOCTYPE html>
+<html>
+<head><title>Study Planner</title></head>
+<body>
+    <h1>🎓 Study Planner Pro LIVE!</h1>
+    <p>Subjects: {{ subjects|length }}</p>
+    <a href="/add_subject">Add Subject</a>
+    {% for subject in subjects %}
+    <p>{{ subject[1] }} - {{ subject[2] }}hrs</p>
+    {% endfor %}
+</body>
+</html>
